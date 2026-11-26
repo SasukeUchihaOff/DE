@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Чудо обувь</title>
+    <link rel="icon" href="{% static 'Чудо Обувь.ico' %}">
+    <style>
+        *{font-family: calibri;}
+        .product-card{
+            display: flex;
+            border: 1px solid black;
+            margin: 10px;
+            padding: 10px;
+            max-width: 756px;
+        }
+        .product-img{
+            width: 256px;
+        }
+        .product-info{
+            flex:1;
+        }
+        .product-title{
+            text-align: center;
+            padding-bottom: 30px;
+        }
+        .login-header{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-header">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <img src="{% static 'Чудо Обувь.png' %}" style="width: 128px;">
+            <h1>Чудо обувь</h1>
+        </div>
+        <div>
+            {% if request.session.user_id %}
+                {% if request.session.role_id == 1 %}
+                    <a href="/admin/" style="margin-right: 15px;">Админ Панель</a>
+                {% elif request.session.role_id == 2 %}
+                    <a href="{% url 'manager_orders' %}" style="margin-right: 15px;">Заказы</a>
+                {% endif %}
+                <a href="{% url 'logout' %}">Выход</a>
+            {% else %}
+                <a href="{% url 'login' %}">Вход</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <h1>Каталог Товаров</h1>
+    {% for product in products %}
+    <div class="product-card" style="background-color: {{ product.bg_color }};">
+        <div><img src="{% if product.img %} {% static product.img %} {% else %} 
+            {% static "picture.png" %}{% endif %}"
+            class="product-img"></div>
+            <div class="product-info">
+            <div class="product-title">{{ product.factoryid }}|{{product.productname}}</div>
+            <div>Категория: {{ product.categoryid }} </div>
+            <div>Количество: {{ product.count_as_word }} </div>
+            <div>Состав: {{ product.composition }} </div>
+        </div>
+        <div>
+            {% if not product.has_prev_month_orders %}
+                <div><b>Цена со скидкой: {{ product.discounted_price }}</b></div>
+                <div style="color: grey;">Старая цена: {{ product.price }}</div>
+            {% else %}
+                <div><b>Цена: {{ product.price }}</b></div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</body>
+</html>

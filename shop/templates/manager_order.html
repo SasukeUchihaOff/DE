@@ -1,0 +1,36 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Заказы</title>
+    <style>
+        * { font-family: Calibri; }
+        table {
+            border-collapse: collapse;
+            width: 80%;
+        }
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+        }
+        th {
+            background-color: #70B2AF;
+        }
+    </style>
+</head>
+<body>
+    <h1>Заказы</h1>
+    <table>
+        <tr><th>№</th><th>Дата</th><th>Клиент</th></tr>
+        {% for order in orders %}
+        <tr>
+            <td>{{ order.orderid }}</td>
+            <td>{{ order.orderdate }}</td>
+            <td>{{ order.userid.secondname }} {{ order.userid.firstname }} {{ order.userid.middlename }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'main' %}">На главную</a>
+</body>
+</html>
